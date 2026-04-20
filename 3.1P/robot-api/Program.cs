@@ -15,10 +15,50 @@ var commandSets = new List<CommandSet>
             new RobotCommandRecord { Name = "MOVE" },
             new RobotCommandRecord { Name = "REPORT" }
         })
-    { Id = 1 }
+    { Id = 1 },
+
+    new CommandSet(
+        comment: "MOVE with NumberOfSteps=2 (expands into 2 MoveCommands — BestEffort)",
+        commands: new List<RobotCommandRecord>
+        {
+            new RobotCommandRecord { Name = "PLACE", X = 0, Y = 0, Direction = "North" },
+            new RobotCommandRecord { Name = "MOVE", NumberOfSteps = 2 },
+            new RobotCommandRecord { Name = "REPORT" }
+        })
+    { Id = 2 },
+
+    new CommandSet(
+        comment: "MOVE NumberOfSteps=5 from Y=8 (second step should fail, BestEffort leaves robot partway)",
+        commands: new List<RobotCommandRecord>
+        {
+            new RobotCommandRecord { Name = "PLACE", X = 0, Y = 8, Direction = "North" },
+            new RobotCommandRecord { Name = "MOVE", NumberOfSteps = 5 },
+            new RobotCommandRecord { Name = "REPORT" }
+        })
+    { Id = 3 },
+
+    new CommandSet(
+        comment: "JUMP_FORWARD 2 — atomic single-command semantics",
+        commands: new List<RobotCommandRecord>
+        {
+            new RobotCommandRecord { Name = "PLACE", X = 0, Y = 0, Direction = "North" },
+            new RobotCommandRecord { Name = "JUMP_FORWARD", NumberOfSteps = 2 },
+            new RobotCommandRecord { Name = "REPORT" }
+        })
+    { Id = 4 },
+
+    new CommandSet(
+        comment: "JUMP_FORWARD 5 from Y=8 — off-map, should fail atomically, robot stays at 0,8",
+        commands: new List<RobotCommandRecord>
+        {
+            new RobotCommandRecord { Name = "PLACE", X = 0, Y = 8, Direction = "North" },
+            new RobotCommandRecord { Name = "JUMP_FORWARD", NumberOfSteps = 5 },
+            new RobotCommandRecord { Name = "REPORT" }
+        })
+    { Id = 5 }
 };
 
-var nextId = 2;
+var nextId = 6;
 
 // --- Command-set CRUD ---
 
@@ -76,6 +116,7 @@ public record CommandSet
 public record RobotCommandRecord
 {
     public string Name { get; set; } = string.Empty;
+    public int? NumberOfSteps { get; set; }
     public int? X { get; set; }
     public int? Y { get; set; }
     public string? Direction { get; set; }

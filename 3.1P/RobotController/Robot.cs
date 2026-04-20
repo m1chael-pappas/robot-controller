@@ -84,7 +84,31 @@ namespace RobotController
         }
 
         /// <summary>
-        /// Checks whether a certain coordinate is on the <see cref="Map"/>. 
+        /// Returns true if robot can move <paramref name="steps"/> cells forward in the direction it is currently facing.
+        /// Named <c>CanMoveSteps</c> rather than overloading <c>CanMove</c> because C# does not allow a property and a method to share a name.
+        /// </summary>
+        public bool CanMoveSteps(int steps)
+        {
+            if (steps < 1) steps = 1;
+            if (CurrentMap == null || CurrentPosition == null) return false;
+
+            switch (Facing)
+            {
+                case Direction.North:
+                    return CurrentMap.IsOnMap(CurrentPosition.X, CurrentPosition.Y + steps);
+                case Direction.East:
+                    return CurrentMap.IsOnMap(CurrentPosition.X + steps, CurrentPosition.Y);
+                case Direction.South:
+                    return CurrentMap.IsOnMap(CurrentPosition.X, CurrentPosition.Y - steps);
+                case Direction.West:
+                    return CurrentMap.IsOnMap(CurrentPosition.X - steps, CurrentPosition.Y);
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks whether a certain coordinate is on the <see cref="Map"/>.
         /// </summary>
         /// <param name="X">X coordinate.</param>
         /// <param name="Y">Y coordinate.</param>
