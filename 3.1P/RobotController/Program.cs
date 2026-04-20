@@ -25,6 +25,10 @@ namespace RobotController
                 Console.WriteLine("Robot is not placed on the map and is waiting for commands.");
                 Console.WriteLine("Please type one of the supported commands from the robot manual.");
             }
+            else if (Uri.IsWellFormedUriString(args[0], UriKind.Absolute))
+            {
+                cp = new HttpCommandProvider();
+            }
             else
             {
                 cp = new FileCommandProvider();

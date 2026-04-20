@@ -1,2 +1,38 @@
 /2.1p.md
 /accepttance .txt
+
+# Build results
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Visual Studio
+.vs/
+.vscode/
+*.sln.iml
+*.user
+
+# Dependencies
+packages/
+.nuget/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+*:Zone.Identifier
+
+# Logs
+*.log
+
+# Legacy compiled snapshot
+/PublishedApps/
+
+# Claude plan scratch (local only)
+.claude/

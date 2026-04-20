@@ -62,10 +62,7 @@ namespace RobotController.CommandProviders
             switch (dto.Name.ToUpperInvariant())
             {
                 case "MOVE":
-                    var steps = dto.NumberOfSteps.GetValueOrDefault(1);
-                    if (steps < 1) steps = 1;
-                    for (var i = 0; i < steps; i++)
-                        yield return new MoveCommand();
+                    yield return new MoveCommand();
                     yield break;
 
                 case "LEFT":
@@ -119,15 +116,12 @@ namespace RobotController.CommandProviders
         public int? Y { get; set; }
         public string Direction { get; set; }
         public string Comment { get; set; }
-        public int? NumberOfSteps { get; set; }
     }
 
     internal class CommandSetDto
     {
         public int Id { get; set; }
         public string Comment { get; set; }
-        public string SchemaVersion { get; set; }
-        public string ExecutionMode { get; set; }
         public List<RobotCommandDto> Commands { get; set; } = new List<RobotCommandDto>();
     }
 }
