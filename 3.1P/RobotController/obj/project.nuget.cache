@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "IIq/fz65OCQ=",
+  "success": true,
+  "projectFilePath": "/home/michael_pappas/uni/backend-services/robot-controller/3.1P/RobotController/RobotController.csproj",
+  "expectedPackageFiles": [
+    "/home/michael_pappas/.nuget/packages/system.io.abstractions/13.2.47/system.io.abstractions.13.2.47.nupkg.sha512",
+    "/home/michael_pappas/.nuget/packages/system.io.filesystem.accesscontrol/5.0.0/system.io.filesystem.accesscontrol.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

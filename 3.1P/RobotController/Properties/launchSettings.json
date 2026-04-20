@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "robot-controller": {
+      "commandName": "Project",
+      "commandLineArgs": "\"../../../../RobotTests/E2ETests/test1.txt\""
+    }
+  }
+}

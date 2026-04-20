@@ -1,0 +1,19 @@
+---------------------------
+MOVE
+RIGHT
+MOVE
+MOVE
+PLACE 4,4,NORTH
+MOVE
+LEFT
+MOVE
+MOVE
+LEFT
+PLACE 1,1,SOUTH
+MOVE
+RIGHT
+MOVE
+REPORT
+Expect Output: 0,0,WEST
+---------------------------
+Actual Output: 
