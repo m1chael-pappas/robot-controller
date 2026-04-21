@@ -1,4 +1,4 @@
-﻿using RobotController.CommandProviders;
+using RobotController.CommandProviders;
 using RobotController.States;
 using System;
 using System.Runtime.CompilerServices;
@@ -17,7 +17,7 @@ namespace RobotController
             /// TODO: Use automocking library to manage mocks in tests.
             /// TODO: Add DI GUI interface to be able to switch between different GUIs:
             /// Console result only, Console draw map, Web app, mobile app
-            
+
             ICommandProvider cp;
             bool needsAdvancedRobot = false;
 
@@ -26,6 +26,26 @@ namespace RobotController
                 cp = new ConsoleCommandProvider();
                 Console.WriteLine("Robot is not placed on the map and is waiting for commands.");
                 Console.WriteLine("Please type one of the supported commands from the robot manual.");
+            }
+            else if (string.Equals(args[0], "dynamic", StringComparison.OrdinalIgnoreCase))
+            {
+                // HD dynamic mode — DynamicCommandProvider keeps one robot session alive while
+                // the user switches between console, file, and api providers at runtime.
+                // AdvancedRobot is mandatory here because :api workflows can be AllOrNothing
+                // (AtomicCommand requires AdvancedRobot for cloning).
+                cp = new DynamicCommandProvider(new IMetaCommandProvider[]
+                {
+                    new ConsoleCommandProvider(),
+                    new FileCommandProvider(),
+                    new AdvancedHttpCommandProvider()
+                });
+                needsAdvancedRobot = true;
+
+                Console.WriteLine("Dynamic mode active. Provider directives:");
+                Console.WriteLine("  :console            — switch to console input (default)");
+                Console.WriteLine("  :file <path>        — read commands from a file");
+                Console.WriteLine("  :api <url>          — fetch a CommandSet from the API");
+                Console.WriteLine("  :quit               — exit the session");
             }
             else if (Uri.IsWellFormedUriString(args[0], UriKind.Absolute))
             {

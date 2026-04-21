@@ -40,6 +40,12 @@ namespace RobotController.Commands
             _commandInput = commandInput;
         }
 
+        public int X => _x;
+
+        public int Y => _y;
+
+        public Direction Facing => _facing;
+
         /// <summary>
         /// Command's name.
         /// </summary>

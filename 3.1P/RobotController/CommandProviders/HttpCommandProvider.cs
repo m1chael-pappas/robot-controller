@@ -95,6 +95,12 @@ namespace RobotController.CommandProviders
                     if (jump < 1) jump = 1;
                     yield return new JumpForwardCommand(jump);
                     yield break;
+
+                case "JUMP_BACKWARD":
+                    var jumpBack = dto.NumberOfSteps.GetValueOrDefault(2);
+                    if (jumpBack < 1) jumpBack = 1;
+                    yield return new JumpBackwardCommand(jumpBack);
+                    yield break;
             }
         }
 
@@ -132,6 +138,7 @@ namespace RobotController.CommandProviders
     {
         public int Id { get; set; }
         public string Comment { get; set; }
+        public string SchemaVersion { get; set; }
         public string ExecutionMode { get; set; }
         public List<RobotCommandDto> Commands { get; set; } = new List<RobotCommandDto>();
     }

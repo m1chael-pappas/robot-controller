@@ -81,10 +81,12 @@ namespace RobotController
 
         public void ExecuteCommand(ICommand command)
         {
-            // AtomicCommand is a workflow wrapper — it executes its own inner commands
-            // through this same method, so each inner command still traverses the state machine
-            // (PLACE inside the workflow triggers the Idle→Active transition normally).
-            if (command is AtomicCommand)
+            // Workflow wrappers (AtomicCommand) and transport sentinels (PostExecutionLogCommand)
+            // bypass the state machine — they are infrastructure, not robot actions, and they
+            // must run even when the robot is in IdleState (e.g. dry-run failed before PLACE).
+            // AtomicCommand's inner commands still traverse the state machine: PLACE inside a
+            // workflow triggers the Idle→Active transition normally.
+            if (command is AtomicCommand || command is PostExecutionLogCommand)
             {
                 command.Execute(this);
                 commandHistory.Add(command);

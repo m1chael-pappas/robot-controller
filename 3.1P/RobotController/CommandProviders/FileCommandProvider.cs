@@ -1,4 +1,4 @@
-﻿using RobotController.Commands;
+using RobotController.Commands;
 using RobotController;
 using System.Collections.Generic;
 using System.IO.Abstractions;
@@ -9,7 +9,7 @@ namespace RobotController.CommandProviders
     /// <summary>
     /// <see cref="FileCommandProvider"/> provides continuous input of robot commands from the file.
     /// </summary>
-    internal class FileCommandProvider : ICommandProvider
+    internal class FileCommandProvider : IMetaCommandProvider
     {
         IFileSystem _fileSystem;
 
@@ -23,12 +23,16 @@ namespace RobotController.CommandProviders
 
         }
 
-        const string PLACE_REGEX = @"^PLACE[\s\u3000-[\r\n]][0-4],[0-4],(NORTH|EAST|WEST|SOUTH)$";
+        public string MetaCommand => ":file";
+
+        const string PLACE_REGEX = @"^PLACE[\s　-[\r\n]][0-4],[0-4],(NORTH|EAST|WEST|SOUTH)$";
 
         /// <summary>
-        /// Gets continuous input of robot commands from the user in the console.
+        /// Gets continuous input of robot commands from the file. Colon-prefixed lines are
+        /// emitted as <see cref="UnknownCommand"/> so a file can route to other providers
+        /// via <see cref="DynamicCommandProvider"/>; other unrecognised lines are silently
+        /// skipped (preserves legacy file-ignore semantics asserted by existing tests).
         /// </summary>
-        /// <returns></returns>
         public IEnumerable<ICommand> GetCommands(string[] args)
         {
             var fileName = args[0];
@@ -48,7 +52,8 @@ namespace RobotController.CommandProviders
                     yield return new ReportCommand();
                 else if (Regex.IsMatch(command, PLACE_REGEX))
                     yield return Deserialize(command);
-
+                else if (!string.IsNullOrEmpty(command) && command[0] == ':')
+                    yield return new UnknownCommand(command);
             }
         }
 

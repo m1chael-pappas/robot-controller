@@ -1,0 +1,156 @@
+{
+  "info": {
+    "name": "robot-api (3.1QP)",
+    "description": "Minimal API behind the HD backend-integration task. Command-set CRUD (Pass), execution log (HD), and server-side rollback generation (HD).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Command Sets",
+      "item": [
+        {
+          "name": "GET /command-sets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/command-sets",
+              "host": ["{{baseUrl}}"],
+              "path": ["command-sets"]
+            }
+          }
+        },
+        {
+          "name": "GET /command-sets/1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/command-sets/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["command-sets", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST /command-sets (AllOrNothing sample)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"comment\": \"Postman-created AllOrNothing workflow\",\n  \"schemaVersion\": \"1.0\",\n  \"executionMode\": \"AllOrNothing\",\n  \"commands\": [\n    { \"name\": \"PLACE\", \"x\": 1, \"y\": 1, \"direction\": \"North\" },\n    { \"name\": \"MOVE\" },\n    { \"name\": \"RIGHT\" },\n    { \"name\": \"MOVE\" },\n    { \"name\": \"REPORT\" }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/command-sets",
+              "host": ["{{baseUrl}}"],
+              "path": ["command-sets"]
+            }
+          }
+        },
+        {
+          "name": "PUT /command-sets/1",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"comment\": \"Updated basic command set\",\n  \"schemaVersion\": \"1.0\",\n  \"executionMode\": \"BestEffort\",\n  \"commands\": [\n    { \"name\": \"PLACE\", \"x\": 0, \"y\": 0, \"direction\": \"North\" },\n    { \"name\": \"MOVE\" },\n    { \"name\": \"MOVE\" },\n    { \"name\": \"REPORT\" }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/command-sets/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["command-sets", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /command-sets/9",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/command-sets/9",
+              "host": ["{{baseUrl}}"],
+              "path": ["command-sets", "9"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Execution Log",
+      "item": [
+        {
+          "name": "POST /command-executions",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workflowId\": 8,\n  \"schemaVersion\": \"2.0\",\n  \"commands\": [\n    { \"name\": \"PLACE\", \"success\": true, \"x\": 2, \"y\": 2, \"direction\": \"NORTH\" },\n    { \"name\": \"MOVE\", \"success\": true },\n    { \"name\": \"RIGHT\", \"success\": true },\n    { \"name\": \"MOVE\", \"success\": true },\n    { \"name\": \"REPORT\", \"success\": true }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/command-executions",
+              "host": ["{{baseUrl}}"],
+              "path": ["command-executions"]
+            }
+          }
+        },
+        {
+          "name": "GET /command-executions/8",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/command-executions/8",
+              "host": ["{{baseUrl}}"],
+              "path": ["command-executions", "8"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rollback",
+      "item": [
+        {
+          "name": "POST /command-sets/8/rollback",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/command-sets/8/rollback",
+              "host": ["{{baseUrl}}"],
+              "path": ["command-sets", "8", "rollback"]
+            }
+          }
+        },
+        {
+          "name": "GET /command-sets/8/rollback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/command-sets/8/rollback",
+              "host": ["{{baseUrl}}"],
+              "path": ["command-sets", "8", "rollback"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5042"
+    }
+  ]
+}

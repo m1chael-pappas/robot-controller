@@ -16,6 +16,8 @@ namespace RobotController.Commands
             this.steps = steps < 1 ? 1 : steps;
         }
 
+        public int Steps => steps;
+
         public string Name => "JUMP_FORWARD";
 
         public string Description => string.Format("Jumps forward {0} cells if possible.", steps);

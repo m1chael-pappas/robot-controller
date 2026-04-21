@@ -1,4 +1,4 @@
-﻿using RobotController.Commands;
+using RobotController.Commands;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -8,14 +8,18 @@ namespace RobotController.CommandProviders
     /// <summary>
     /// <see cref="ConsoleCommandProvider"/> provides continuous input of robot commands from the user in the console.
     /// </summary>
-    internal class ConsoleCommandProvider : ICommandProvider
+    internal class ConsoleCommandProvider : IMetaCommandProvider
     {
-        const string PLACE_REGEX = @"^PLACE[\s\u3000-[\r\n]][0-4],[0-4],(NORTH|EAST|WEST|SOUTH)$";
+        const string PLACE_REGEX = @"^PLACE[\s　-[\r\n]][0-4],[0-4],(NORTH|EAST|WEST|SOUTH)$";
+
+        public string MetaCommand => ":console";
 
         /// <summary>
         /// Gets continuous input of robot commands from the user in the console.
+        /// Unrecognised input is emitted as <see cref="UnknownCommand"/> so
+        /// <see cref="DynamicCommandProvider"/> can route provider-switch directives
+        /// like <c>:api &lt;url&gt;</c> or <c>:quit</c>.
         /// </summary>
-        /// <returns></returns>
         public IEnumerable<ICommand> GetCommands(string[] args = null)
         {
             string command;
@@ -32,6 +36,8 @@ namespace RobotController.CommandProviders
                     yield return new ReportCommand();
                 else if (Regex.IsMatch(command, PLACE_REGEX))
                     yield return Deserialize(command);
+                else
+                    yield return new UnknownCommand(command);
             }
         }
 
