@@ -7,6 +7,7 @@ var commandSets = new List<CommandSet>
 {
     new CommandSet(
         comment: "Basic command set",
+        executionMode: "BestEffort",
         commands: new List<RobotCommandRecord>
         {
             new RobotCommandRecord { Name = "PLACE", X = 0, Y = 0, Direction = "North" },
@@ -19,6 +20,7 @@ var commandSets = new List<CommandSet>
 
     new CommandSet(
         comment: "MOVE with NumberOfSteps=2 (expands into 2 MoveCommands — BestEffort)",
+        executionMode: "BestEffort",
         commands: new List<RobotCommandRecord>
         {
             new RobotCommandRecord { Name = "PLACE", X = 0, Y = 0, Direction = "North" },
@@ -29,6 +31,7 @@ var commandSets = new List<CommandSet>
 
     new CommandSet(
         comment: "MOVE NumberOfSteps=5 from Y=8 (second step should fail, BestEffort leaves robot partway)",
+        executionMode: "BestEffort",
         commands: new List<RobotCommandRecord>
         {
             new RobotCommandRecord { Name = "PLACE", X = 0, Y = 8, Direction = "North" },
@@ -39,6 +42,7 @@ var commandSets = new List<CommandSet>
 
     new CommandSet(
         comment: "JUMP_FORWARD 2 — atomic single-command semantics",
+        executionMode: "BestEffort",
         commands: new List<RobotCommandRecord>
         {
             new RobotCommandRecord { Name = "PLACE", X = 0, Y = 0, Direction = "North" },
@@ -49,16 +53,43 @@ var commandSets = new List<CommandSet>
 
     new CommandSet(
         comment: "JUMP_FORWARD 5 from Y=8 — off-map, should fail atomically, robot stays at 0,8",
+        executionMode: "BestEffort",
         commands: new List<RobotCommandRecord>
         {
             new RobotCommandRecord { Name = "PLACE", X = 0, Y = 8, Direction = "North" },
             new RobotCommandRecord { Name = "JUMP_FORWARD", NumberOfSteps = 5 },
             new RobotCommandRecord { Name = "REPORT" }
         })
-    { Id = 5 }
+    { Id = 5 },
+
+    new CommandSet(
+        comment: "AllOrNothing from Y=8 — dry-run detects 3rd MOVE fails, real robot stays at 0,8",
+        executionMode: "AllOrNothing",
+        commands: new List<RobotCommandRecord>
+        {
+            new RobotCommandRecord { Name = "PLACE", X = 0, Y = 8, Direction = "North" },
+            new RobotCommandRecord { Name = "MOVE" },
+            new RobotCommandRecord { Name = "MOVE" },
+            new RobotCommandRecord { Name = "MOVE" },
+            new RobotCommandRecord { Name = "REPORT" }
+        })
+    { Id = 6 },
+
+    new CommandSet(
+        comment: "AllOrNothing that succeeds — committed as one unit",
+        executionMode: "AllOrNothing",
+        commands: new List<RobotCommandRecord>
+        {
+            new RobotCommandRecord { Name = "PLACE", X = 2, Y = 2, Direction = "North" },
+            new RobotCommandRecord { Name = "MOVE" },
+            new RobotCommandRecord { Name = "RIGHT" },
+            new RobotCommandRecord { Name = "MOVE" },
+            new RobotCommandRecord { Name = "REPORT" }
+        })
+    { Id = 7 }
 };
 
-var nextId = 6;
+var nextId = 8;
 
 // --- Command-set CRUD ---
 
@@ -103,12 +134,14 @@ public record CommandSet
 {
     public int Id { get; set; }
     public string Comment { get; set; }
+    public string? ExecutionMode { get; set; }
     public List<RobotCommandRecord> Commands { get; set; }
 
-    public CommandSet(string comment, List<RobotCommandRecord> commands)
+    public CommandSet(string comment, string? executionMode, List<RobotCommandRecord> commands)
     {
         Id = 0;
         Comment = comment;
+        ExecutionMode = executionMode;
         Commands = commands ?? new List<RobotCommandRecord>();
     }
 }

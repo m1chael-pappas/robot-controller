@@ -132,6 +132,7 @@ namespace RobotController.CommandProviders
     {
         public int Id { get; set; }
         public string Comment { get; set; }
+        public string ExecutionMode { get; set; }
         public List<RobotCommandDto> Commands { get; set; } = new List<RobotCommandDto>();
     }
 }

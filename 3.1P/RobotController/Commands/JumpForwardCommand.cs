@@ -28,12 +28,21 @@ namespace RobotController.Commands
         {
             Executed = true;
 
-            if (!(robot is Robot concreteRobot))
+            bool canMove;
+            if (robot is AdvancedRobot advancedRobot)
+            {
+                canMove = advancedRobot.CanMoveSteps(steps);
+            }
+            else if (robot is Robot concreteRobot)
+            {
+                canMove = concreteRobot.CanMoveSteps(steps);
+            }
+            else
             {
                 return Success = false;
             }
 
-            if (!concreteRobot.CanMoveSteps(steps))
+            if (!canMove)
             {
                 return Success = false;
             }

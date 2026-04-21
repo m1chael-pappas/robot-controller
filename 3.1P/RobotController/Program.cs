@@ -19,6 +19,8 @@ namespace RobotController
             /// Console result only, Console draw map, Web app, mobile app
             
             ICommandProvider cp;
+            bool needsAdvancedRobot = false;
+
             if (args.Length == 0)
             {
                 cp = new ConsoleCommandProvider();
@@ -27,7 +29,10 @@ namespace RobotController
             }
             else if (Uri.IsWellFormedUriString(args[0], UriKind.Absolute))
             {
-                cp = new HttpCommandProvider();
+                // URL arg goes through the Distinction-level provider so AllOrNothing workflows
+                // can be wrapped in AtomicCommand, which requires AdvancedRobot for cloning.
+                cp = new AdvancedHttpCommandProvider();
+                needsAdvancedRobot = true;
             }
             else
             {
@@ -35,7 +40,9 @@ namespace RobotController
             }
 
             var map = new Map(10, 10);
-            var robot = new Robot(map);
+            IRobot robot = needsAdvancedRobot
+                ? (IRobot)new AdvancedRobot(map)
+                : new Robot(map);
             robot.CurrentState = new IdleState(robot);
 
             foreach (var command in cp.GetCommands(args))
